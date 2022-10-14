@@ -9,7 +9,6 @@ jobs:
   build:
     name: ${{ matrix.arch }} build
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
         arch:
@@ -28,6 +27,7 @@ jobs:
 
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
+        if: always()
         with:
           ## limits ssh access and adds the ssh public key for the user which triggered the workflow
           limit-access-to-actor: true
