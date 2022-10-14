@@ -2,7 +2,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=softethervpn5
+PKG_NAME:=softethervpn5-git
 PKG_VERSION:=5.02.5180
 PKG_RELEASE:=$(AUTORELEASE)
 
@@ -17,64 +17,64 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/SoftEtherVPN-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/SoftEtherVPN-$(PKG_VERSION)
 
 HOST_BUILD_DEPENDS:=ncurses/host readline/host
-PKG_BUILD_DEPENDS:=softethervpn5/host
+PKG_BUILD_DEPENDS:=softethervpn5-git/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/nls.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-define Package/softethervpn5/Default
+define Package/softethervpn5-git/Default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=VPN
-  TITLE:=softethervpn5 v$(PKG_VERSION)
+  TITLE:=softethervpn5-git v$(PKG_VERSION)
   URL:=http://www.softether.org/
 endef
 
-define Package/softethervpn5/Default/description
+define Package/softethervpn5-git/Default/description
   SoftEther VPN supports SSL-VPN, OpenVPN, L2TP, EtherIP, L2TPv3 and IPsec as a single VPN software.
   SoftEther VPN is not only an alternative VPN server to existing VPN products (OpenVPN, IPsec and MS-SSTP),
   but has also original strong SSL-VPN protocol to penetrate any kinds of firewalls.
   Guide: https://wordpress.tirlins.com/2015/03/setting-up-softether-vpn-on-openwrt/
 endef
 
-define Package/softethervpn5-libs
-  $(call Package/softethervpn5/Default)
+define Package/softethervpn5-git-libs
+  $(call Package/softethervpn5-git/Default)
   DEPENDS:=+libsodium +libpthread +librt +libreadline +libopenssl +libncurses +kmod-tun +zlib $(ICONV_DEPENDS)
   TITLE+= libs
   HIDDEN:=1
 endef
 
-define Package/softethervpn5-server
-  $(call Package/softethervpn5/Default)
+define Package/softethervpn5-git-server
+  $(call Package/softethervpn5-git/Default)
   TITLE+= server
-  DEPENDS:= +softethervpn5-libs
+  DEPENDS:= +softethervpn5-git-libs
 endef
-define Package/softethervpn5-server/description
-  $(call Package/softethervpn5/Default/description)
+define Package/softethervpn5-git-server/description
+  $(call Package/softethervpn5-git/Default/description)
 
   Provides the vpnserver (daemon).
 endef
 
-define Package/softethervpn5-bridge
-  $(call Package/softethervpn5/Default)
+define Package/softethervpn5-git-bridge
+  $(call Package/softethervpn5-git/Default)
   TITLE+= bridge
-  DEPENDS:= +softethervpn5-libs  
+  DEPENDS:= +softethervpn5-git-libs  
 endef
-define Package/softethervpn5-bridge/description
-  $(call Package/softethervpn5/Default/description)
+define Package/softethervpn5-git-bridge/description
+  $(call Package/softethervpn5-git/Default/description)
 
   Provides the vpnbridge (daemon).
 endef
 
-define Package/softethervpn5-client
-  $(call Package/softethervpn5/Default)
+define Package/softethervpn5-git-client
+  $(call Package/softethervpn5-git/Default)
   TITLE+= client
-  DEPENDS:= +softethervpn5-libs  
+  DEPENDS:= +softethervpn5-git-libs  
 endef
-define Package/softethervpn5-client/description
-  $(call Package/softethervpn5/Default/description)
+define Package/softethervpn5-git-client/description
+  $(call Package/softethervpn5-git/Default/description)
 
   Provides the vpnclient.
 endef
@@ -113,7 +113,7 @@ define Build/Compile
 	$(call Build/Compile/Default,vpnserver vpnbridge vpnclient vpncmd hamcore-archive-build)
 endef
 
-define Package/softethervpn5-libs/install
+define Package/softethervpn5-git-libs/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libcedar.so $(1)/usr/lib/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmayaqua.so $(1)/usr/lib/
@@ -129,7 +129,7 @@ define Package/softethervpn5-libs/install
 	$(LN) ../../usr/libexec/softethervpn/launcher.sh $(1)/usr/bin/vpncmd
 endef
 
-define Package/softethervpn5-server/install
+define Package/softethervpn5-git-server/install
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/libexec/softether/vpnserver/vpnserver $(1)/usr/libexec/softethervpn/
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/vpn_server.config
@@ -137,7 +137,7 @@ define Package/softethervpn5-server/install
 	$(INSTALL_BIN) files/vpnserver.init $(1)/etc/init.d/softethervpnserver
 endef
 
-define Package/softethervpn5-bridge/install
+define Package/softethervpn5-git-bridge/install
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/libexec/softether/vpnbridge/vpnbridge $(1)/usr/libexec/softethervpn/
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/vpn_bridge.config
@@ -145,7 +145,7 @@ define Package/softethervpn5-bridge/install
 	$(INSTALL_BIN) files/vpnbridge.init $(1)/etc/init.d/softethervpnbridge
 endef
 
-define Package/softethervpn5-client/install
+define Package/softethervpn5-git-client/install
 	$(INSTALL_DIR) $(1)/usr/libexec/softethervpn
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/libexec/softether/vpnclient/vpnclient $(1)/usr/libexec/softethervpn/
 	$(INSTALL_DATA) files/dummy $(1)/usr/libexec/softethervpn/vpn_client.config
@@ -153,23 +153,23 @@ define Package/softethervpn5-client/install
 	$(INSTALL_BIN) files/vpnclient.init $(1)/etc/init.d/softethervpnclient
 endef
 
-define Package/softethervpn5-server/conffiles
+define Package/softethervpn5-git-server/conffiles
 /usr/libexec/softethervpn/vpn_server.config
 /usr/libexec/softethervpn/lang.config
 endef
 
-define Package/softethervpn5-bridge/conffiles
+define Package/softethervpn5-git-bridge/conffiles
 /usr/libexec/softethervpn/vpn_bridge.config
 /usr/libexec/softethervpn/lang.config
 endef
 
-define Package/softethervpn5-client/conffiles
+define Package/softethervpn5-git-client/conffiles
 /usr/libexec/softethervpn/vpn_client.config
 /usr/libexec/softethervpn/lang.config
 endef
 
 $(eval $(call HostBuild))
-$(eval $(call BuildPackage,softethervpn5-libs))
-$(eval $(call BuildPackage,softethervpn5-server))
-$(eval $(call BuildPackage,softethervpn5-bridge))
-$(eval $(call BuildPackage,softethervpn5-client))
+$(eval $(call BuildPackage,softethervpn5-git-libs))
+$(eval $(call BuildPackage,softethervpn5-git-server))
+$(eval $(call BuildPackage,softethervpn5-git-bridge))
+$(eval $(call BuildPackage,softethervpn5-git-client))
